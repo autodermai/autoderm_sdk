@@ -178,7 +178,7 @@ class AutodermClient(ClientBase):
         if model is not None:
             params["model"] = model
         if limit is not None:
-            params["model"] = limit
+            params["limit"] = limit
 
         # Send the query
         response = requests.post(
