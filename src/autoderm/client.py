@@ -4,6 +4,8 @@ import posixpath
 import time
 from json import JSONDecodeError
 from typing import Any, Dict, Iterator
+from PIL import Image
+import io
 
 from httpx import Client, ConnectError, HTTPTransport, RequestError, Response
 
