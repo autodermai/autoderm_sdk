@@ -156,6 +156,30 @@ class AutodermClient(ClientBase):
             # Retry as a generator
             for r in self._request(method, json, path, stream=stream, attempt=attempt):
                 yield r
+    
+    # Make image prediction
+    # todo: change image content to more pytonic object
+    def query(self, image_contents, model=None, save_image=True):
+
+        # send the query
+        response = requests.post(
+            self._endpoint + "/v1/query",
+            headers={"Api-Key": self._api_key},
+            files={"file": image_contents},
+            params={"language": "en", "simple_names": "True", "save_image": True}
+        )
+
+        print(response._content)
+        if response.status_code != 200:
+            print(f'status_error: {response.status_code}')
+        else:
+            # get the JSON data returned
+            data = response.json()
+
+            # get only the predictions
+            predictions = data["predictions"]
+
+            return predictions
 
     # Endpoint
     # @ api_call_id: Single ID of ApiKeyUsage
@@ -189,10 +213,9 @@ class AutodermClient(ClientBase):
             params=params
         )
             
-        print(response._content)
         if response.status_code != 200:
             print(f'status_error: {response.status_code}')
-            return response.status_code
+            raise AutodermAPIStatusException.from_response(response, message=f'Failed to perform API call: {response.content}')
         else:
             
             api_calls, failed_ids = parse_api_calls(response.content.decode())
@@ -204,7 +227,7 @@ class AutodermClient(ClientBase):
             else:
                 print('')
 
-            return api_calls, failed_ids
+            return api_calls#, failed_ids
         
 
     def get_image(self, api_call_id):
@@ -215,10 +238,9 @@ class AutodermClient(ClientBase):
             params={"language": "en", "api_call_id": api_call_id}
         )
             
-        print(response._content)
         if response.status_code != 200:
             print(f'status_error: {response.status_code}')
-            return response.status_code
+            return {response.status_code, response.content}
         else:
             image_bytes = response.content
             image = Image.open(io.BytesIO(image_bytes))
