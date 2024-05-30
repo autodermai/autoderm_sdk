@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "autoderm"
-version = "0.0.2"
+version = "0.0.4"
 description = "Autoderm's Official SDK Client."
 authors = ["Lucas <lucas@autoderm.ai>"]
 readme = "README.md"
@@ -30,7 +30,7 @@ exclude = ["docs", "tests", "examples", "tools", "build"]
 python = "^3.9"
 orjson = "^3.9.10"
 pydantic = "^2.5.2"
-httpx = "^0.23.2"
+httpx = "^0.25"
 
 
 [tool.poetry.group.dev.dependencies]
