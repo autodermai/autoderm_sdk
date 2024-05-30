@@ -1,9 +1,13 @@
 [tool.poetry]
 name = "autoderm"
 version = "0.0.1"
-description = ""
+description = "Autoderm's Official SDK Client."
 authors = ["Lucas <lucas@autoderm.ai>"]
 readme = "README.md"
+
+[tool.urls]
+Homepage = "https://github.com/autodermai/autoderm_sdk"
+Issues = "https://github.com/autodermai/autoderm_sdk/issues"
 
 [tool.ruff]
 select = ["E", "F", "W", "Q", "I"]

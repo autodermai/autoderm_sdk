@@ -21,16 +21,6 @@ from autoderm.exceptions import (
 from autoderm.api_call import parse_api_calls
 
 
-#from autoderm.models.chat_completion import (
-##    ChatCompletionResponse,
- #   ChatCompletionStreamResponse,
- #   ResponseFormat,
- #   ToolChoice,
-#)
-#from autoderm.models.embeddings import EmbeddingResponse
-#from autoderm.models.models import ModelList
-
-
 class AutodermClient(ClientBase):
     """
     Synchronous wrapper around the async client
@@ -159,6 +149,7 @@ class AutodermClient(ClientBase):
     
     # Make image prediction
     # todo: change image content to more pytonic object
+    # now only English language
     def query(self, image_contents, model=None, save_image=True):
 
         # send the query
@@ -166,12 +157,15 @@ class AutodermClient(ClientBase):
             self._endpoint + "/v1/query",
             headers={"Api-Key": self._api_key},
             files={"file": image_contents},
-            params={"language": "en", "simple_names": "True", "save_image": True}
+            params={"language": "en", "simple_names": "True", "save_image": save_image, "model": model}
         )
 
         print(response._content)
         if response.status_code != 200:
             print(f'status_error: {response.status_code}')
+            error_message = f'Status Error: {response.status_changed}'
+            print(error_message)
+            raise ValueError(error_message)
         else:
             # get the JSON data returned
             data = response.json()
@@ -185,8 +179,6 @@ class AutodermClient(ClientBase):
     # @ api_call_id: Single ID of ApiKeyUsage
     # @ api_call_ids: list[i32] of IDs of ApiKeyUsage
     # @ ad_uuid: UUID of a guest user
-    # @ start_period TODO
-    # @ end_period TODO
     def get_api_calls(self, api_call_id=None, api_call_ids=None, ad_uuid=None, start_period=None, end_period=None, model=None, limit=None):
 
         # send the query
